@@ -13,24 +13,17 @@ namespace Namesearch
         {
             char[] delimiterChars = { ' ', ',', '.', ':', '\t', ';'};
 
-            //string path_navne = @"C:\Private\Data\FE\Opgave\danske_drengenavne.txt";
-            string path_navne = @"C:\Private\Data\FE\Opgave\drengenavne_test.txt";
+            string path_navne = @"C:\Private\Data\FE\Opgave\danske_drengenavne.txt";
+            //string path_navne = @"C:\Private\Data\FE\Opgave\drengenavne_test.txt";
             string navne_liste = File.ReadAllText(path_navne);
             string[] navne = navne_liste.Split(delimiterChars);
             uint[] navne_hash = new uint[(int)navne.Length];
 
-            //string path_tekst = @"C:\Private\Data\FE\Opgave\sample_tekst.txt";
-            string path_tekst = @"C:\Private\Data\FE\Opgave\sample_tekst_test.txt";
+            string path_tekst = @"C:\Private\Data\FE\Opgave\sample_tekst.txt";
+            //string path_tekst = @"C:\Private\Data\FE\Opgave\sample_tekst_test.txt";
             string tekst = File.ReadAllText(path_tekst);
             string[] ord = tekst.Split(delimiterChars);
             uint[] tekst_hash = new uint[(int)ord.Length];
-
-            foreach (string s in navne)
-                Console.WriteLine("Navn: {0}", s);
-
-            foreach (string s in ord)
-                Console.WriteLine("Ord: {0}", s);
-
 
             // Hash navne og ord
             for (int n = 0; n < ord.Length; n++)
@@ -42,17 +35,6 @@ namespace Namesearch
             {
                 navne_hash[n] = SearchText.hash( navne[n] );
             }
-
-            //for (int i = 0; i < 6; i++)
-            //    Console.WriteLine("Navn: {0}", navne_hash[i]);
-
-            //Array.Sort(navne_hash);
-            foreach (uint n in navne_hash)
-                Console.WriteLine("Sorted hash, navne: {0}", n);
-
-            //Array.Sort(navne_hash);
-            foreach (uint n in tekst_hash)
-                Console.WriteLine("Sorted hash, tekst: {0}", n);
 
             uint[,] fundne_navne = new uint[(int)navne.Length, 2];
             uint navne_idx = 0;
@@ -66,21 +48,23 @@ namespace Namesearch
                     if (navne_hash[m] == tekst_hash[n])
                     {
                         matches += 1;
-                        //if (navne_idx != m) // New name found!
-                        //{
-                        //    navne_idx = m;
-                        //    unikke_navne += 1;
-                        //}
-                        //fundne_navne[unikke_navne, 1] = m;
-                        //fundne_navne[unikke_navne, 2] = matches;                        
+                        fundne_navne[unikke_navne, 0] = navne_idx;
+                        fundne_navne[unikke_navne, 1] = matches;
+                        
+                        if (navne_idx != m) // New name found!
+                        {
+                            navne_idx = m;      // Update name index
+                            unikke_navne += 1;  // Increment counter of unique names
+                            matches = 0;        // Reset match counter
+                        }
                     }
                 }
             }
+            
+            Console.WriteLine("Unikke navne: {0}", unikke_navne);
 
-            Console.WriteLine("Matches: {0}", matches);
-
-            //for (uint n = 0; n < unikke_navne; n++)
-            //    Console.WriteLine("Navn (Hash): {0}, Antal forekomster: {1}", fundne_navne[n,1], fundne_navne[n,2]);
+            for (uint n = 0; n < unikke_navne; n++)
+                Console.WriteLine("Navn : {0},\tAntal forekomster: {1}", navne[fundne_navne[n, 0]], fundne_navne[n, 1]);
 
             Console.ReadKey();
 
