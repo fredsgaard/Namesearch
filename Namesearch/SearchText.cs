@@ -1,66 +1,109 @@
 ﻿using System.Collections.Generic;
+using System;
 
 public class SearchText
 {
-    const uint PRIME_BASE = 257;
+    const uint PRIME_BASE = 31;
     const uint PRIME_MOD = 1000000007;
 
-    public static int[] rabinKarbSearch(string A, string B)
+    public static uint[] hash(string[] key)
     {
-        List<int> retVal = new List<int>();
-        ulong siga = 0;
-        ulong sigb = 0;
-        ulong Q = 100007;
-        ulong D = 256;
+        uint[] hash_table = new uint[(int)key.Length];
 
-        for (int i = 0; i < B.Length; ++i)
+        for (int n = 0; n < key.Length; n++)
         {
-            siga = (siga * D + (ulong)A[i]) % Q;
-            sigb = (sigb * D + (ulong)B[i]) % Q;
+            ulong hashval = 0;
+
+            for (int i = 0; i < key[n].Length; i++)
+            {
+                hashval = key[n][i] + PRIME_BASE * hashval;
+            }
+
+            hash_table[n] = (uint)(hashval % PRIME_MOD);
         }
 
-        if (siga == sigb)
-            retVal.Add(0);
-
-        ulong pow = 1;
-
-        for (int k = 1; k <= B.Length - 1; ++k)
-            pow = (pow * D) % Q;
-
-        for (int j = 1; j <= A.Length - B.Length; ++j)
-        {
-            siga = (siga + Q - pow * (ulong)A[j - 1] % Q) % Q;
-            siga = (siga * D + (ulong)A[j + B.Length - 1]) % Q;
-
-            if (siga == sigb)
-                if (A.Substring(j, B.Length) == B)
-                    retVal.Add(j);
-        }
-
-        return retVal.ToArray();
+        return hash_table;
     }
 
-    public static uint hash( string key )
+    public static uint[] newHash(string[] key)
     {
-        uint hashval = 0;
-
-        for ( int i = 0; i < key.Length; i++)
+        const int CHUNK = 4;
+        uint[] hash_table = new uint[(int)key.Length];
+        
+        for (int n = 0; n < key.Length; n++) // Loop over all words in string array
         {
-            hashval = key[i] + PRIME_BASE * hashval;
-        }
+            int letterIdx = 0;
+            ulong hashsum = 0;
+            int numOfChunks = (int)key[n].Length / CHUNK;
+            int arrayLength = numOfChunks;
+            int chunkIdx = 0; 
 
-        return hashval % PRIME_MOD; 
+            if(((int)key[n].Length % CHUNK) > 0)
+            {
+                arrayLength = numOfChunks + 1;
+            }
+            ulong[] array2sum = new ulong[arrayLength];
+
+            for (int m = 0; m < numOfChunks; m++)
+            {
+                ulong chunk_val = 0;
+                for (int ii = 0; ii < CHUNK; ii++)
+                {
+                    letterIdx = m * CHUNK + ii;
+                    chunk_val = key[n][letterIdx] + PRIME_BASE * chunk_val;
+                }
+                array2sum[m] = chunk_val;
+                chunkIdx += 1;
+            }
+
+            // mod(word length, chunk size) ~ 0:
+            if(letterIdx < (int)key[n].Length-1)
+            {
+                ulong chunk_val = 0; 
+                for(int j = numOfChunks*CHUNK; j < (int)key[n].Length; j++)
+                {
+                    chunk_val = key[n][j] + PRIME_BASE * chunk_val;
+                }
+                array2sum[chunkIdx] = chunk_val;
+            }
+
+            // Sum all hashed chunks of the string
+            for(int c = 0; c < arrayLength;  c++)
+            {
+                hashsum += array2sum[c];
+            }
+
+
+            hash_table[n] = (uint)(hashsum % PRIME_MOD);
+        }
+        return hash_table;
     }
 
-    public static uint hash_navne(string key)
-    {
-        uint hashval = 0;
+    public static void keywordSearch(uint[] navne, uint[] tekst, ref uint unikke_navne, ref uint[,] fundne_navne)
+    {       
+        uint navne_idx = 0;
+        uint matches = 0;        
 
-        for (int i = 2; i < key.Length - 2; i++)
+        for (uint m = 0; m < navne.Length; m++)
         {
-            hashval = key[i] + PRIME_BASE * hashval;
-        }
+            for (uint n = 0; n < tekst.Length; n++)
+            {
+                if (navne[m] == tekst[n])
+                {
+                    if (navne_idx != m) // New name found!
+                    {
+                        navne_idx = m;      // Update name index
+                        unikke_navne += 1;  // Increment counter of unique names
+                        matches = 0;        // Reset match counter
+                    }
 
-        return hashval % PRIME_MOD;
+                    matches += 1;
+
+                    fundne_navne[unikke_navne-1, 0] = navne_idx;
+                    fundne_navne[unikke_navne-1, 1] = matches;
+                }
+            }
+        }
     }
+
 }
