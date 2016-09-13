@@ -107,18 +107,15 @@ public class SearchText
         }
     }
 
-    public static void writeToFile(uint[] data, string fileName)
+    public static void writeToFile(uint[] data, string path, string fileName)
     {
-        string path = @"C:\Private\Data\FE\Opgave\";
-        string fileType = ".csv";
-
         if ((!File.Exists(path + fileName))) //Checking if 
         {
             FileStream fs = File.Create(path + fileName); //Creates Scores.txt
             fs.Close(); //Closes file stream
         }
 
-        using (System.IO.StreamWriter file = new System.IO.StreamWriter(path + fileName + fileType))
+        using (System.IO.StreamWriter file = new System.IO.StreamWriter(path + fileName))
         {
             for (int i = 0; i < data.Length; i++)
             {
@@ -128,18 +125,15 @@ public class SearchText
 
     }
 
-    public static void writeResultToFile(string[] navne, uint[,] searchResult, string fileName, uint unikkeHits)
+    public static void writeResultToFile(string[] navne, uint[,] searchResult, string path, string fileName, uint unikkeHits)
     {
-        string path = @"C:\Private\Data\FE\Opgave\";
-        string fileType = ".csv";
-
         if ((!File.Exists(path + fileName))) //Checking if file exist
         {
             FileStream fs = File.Create(path + fileName); //Creates Scores.txt
             fs.Close(); //Closes file stream
         }
 
-        using (System.IO.StreamWriter file = new System.IO.StreamWriter(path + fileName + fileType))
+        using (System.IO.StreamWriter file = new System.IO.StreamWriter(path + fileName))
         {
             for (int i = 0; i < unikkeHits; i++)
             {

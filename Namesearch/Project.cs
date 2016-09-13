@@ -13,23 +13,28 @@ namespace Namesearch
         static int Main(string[] args)
         {
             char[] delimiterChars = { ' ', ',', '.', ':', '\t', ';', '\''};
+            
+            Console.WriteLine("Angiv sti til navne-fil:");
+            string path = Console.ReadLine();
 
-            string path_navne = @"C:\Private\Data\FE\Opgave\danske_drengenavne.txt";
-            string navne_liste = File.ReadAllText(path_navne);
+            Console.WriteLine("Angiv navn på txt navne-fil:");
+            string fileName_navne = Console.ReadLine();
+            string navne_liste = File.ReadAllText(path + fileName_navne);
             string[] navne = navne_liste.Split(delimiterChars);
             uint[] navne_hash = new uint[(int)navne.Length];
 
-            string path_tekst = @"C:\Private\Data\FE\Opgave\sample_tekst.txt";
-            string tekst = File.ReadAllText(path_tekst);            
+            Console.WriteLine("Angiv navn på txt tekst-fil:");
+            string fileName_tekst = Console.ReadLine();
+            string tekst = File.ReadAllText(path + fileName_tekst);            
             string[] ord = tekst.Split(delimiterChars);
             uint[] tekst_hash = new uint[(int)ord.Length];
 
             // Hash navne og ord
             tekst_hash = SearchText.newHash(ord);
             navne_hash = SearchText.newHash(navne);
-
-            SearchText.writeToFile(tekst_hash, "tekst_hash");
-            SearchText.writeToFile(navne_hash, "navne_hash");
+           
+            SearchText.writeToFile(tekst_hash, path, "tekst_hash.csv");
+            SearchText.writeToFile(navne_hash, path,  "navne_hash.csv");
 
             uint[,] fundne_navne = new uint[navne.Length, 2];
             uint unikke_hits = 0;
@@ -38,7 +43,7 @@ namespace Namesearch
             SearchText.keywordSearch(navne_hash, tekst_hash, ref unikke_hits, ref fundne_navne);
 
             // Skriv resultat til fil
-            SearchText.writeResultToFile(navne, fundne_navne, "searchResult", unikke_hits);
+            SearchText.writeResultToFile(navne, fundne_navne, path, "searchResult.csv", unikke_hits);
               
             // Print resultater til konsollen
             for (uint n = 0; n < unikke_hits; n++)
