@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System;
+using System.IO;
 
 public class SearchText
 {
@@ -102,6 +103,48 @@ public class SearchText
                     fundne_navne[unikke_navne-1, 0] = navne_idx;
                     fundne_navne[unikke_navne-1, 1] = matches;
                 }
+            }
+        }
+    }
+
+    public static void writeToFile(uint[] data, string fileName)
+    {
+        string path = @"C:\Private\Data\FE\Opgave\";
+        string fileType = ".csv";
+
+        if ((!File.Exists(path + fileName))) //Checking if 
+        {
+            FileStream fs = File.Create(path + fileName); //Creates Scores.txt
+            fs.Close(); //Closes file stream
+        }
+
+        using (System.IO.StreamWriter file = new System.IO.StreamWriter(path + fileName + fileType))
+        {
+            for (int i = 0; i < data.Length; i++)
+            {
+                file.WriteLine(data[i]);
+            }
+        }
+
+    }
+
+    public static void writeResultToFile(string[] navne, uint[,] searchResult, string fileName, uint unikkeHits)
+    {
+        string path = @"C:\Private\Data\FE\Opgave\";
+        string fileType = ".csv";
+
+        if ((!File.Exists(path + fileName))) //Checking if 
+        {
+            FileStream fs = File.Create(path + fileName); //Creates Scores.txt
+            fs.Close(); //Closes file stream
+        }
+
+        using (System.IO.StreamWriter file = new System.IO.StreamWriter(path + fileName + fileType))
+        {
+            for (int i = 0; i < unikkeHits; i++)
+            {
+                file.WriteLine(navne[searchResult[i, 0]] + "\t" + searchResult[i, 1]);
+                //file.WriteLine(searchResult[i, 1]);
             }
         }
     }

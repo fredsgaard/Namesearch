@@ -27,14 +27,18 @@ namespace Namesearch
 
             // Hash navne og ord
             tekst_hash = SearchText.newHash(ord);
-            navne_hash = SearchText.newHash(navne);                                 
+            navne_hash = SearchText.newHash(navne);
+
+            SearchText.writeToFile(tekst_hash, "tekst_hash");
+            SearchText.writeToFile(navne_hash, "navne_hash");
 
             uint[,] fundne_navne = new uint[navne.Length, 2];
             uint unikke_hits = 0;
 
             // Find alle forekomster af hashede navne i den hashede tekst og returner i array fundne_navne og unikke hits.
             SearchText.keywordSearch(navne_hash, tekst_hash, ref unikke_hits, ref fundne_navne);
-            
+            SearchText.writeResultToFile(navne, fundne_navne, "searchResult", unikke_hits);
+              
             // Print resultater til konsollen
             for (uint n = 0; n < unikke_hits; n++)
                 Console.WriteLine("Navn : {0},\tHash index : {1}, \tAntal forekomster: {2}", navne[fundne_navne[n, 0]], fundne_navne[n, 0], fundne_navne[n, 1]);
@@ -45,54 +49,3 @@ namespace Namesearch
         }
     }
 }
-// if ((!File.Exists(@"C:\Private\Data\FE\Opgave\tekst_hash.txt"))) //Checking if scores.txt exists or not
-//            {
-//                FileStream fs = File.Create(@"C:\Private\Data\FE\Opgave\tekst_hash.txt"); //Creates Scores.txt
-//fs.Close(); //Closes file stream
-//            }
-
-//            using (System.IO.StreamWriter file = new System.IO.StreamWriter(@"C:\Private\Data\FE\Opgave\tekst_hash.txt"))
-//            {
-//                for (int i = 0; i<tekst_hash.Length; i++)
-//                {
-//                    file.WriteLine(tekst_hash[i]);
-//                }
-//            }
-
-//            if ((!File.Exists(@"C:\Private\Data\FE\Opgave\navne_hash.txt"))) //Checking if scores.txt exists or not
-//            {
-//                FileStream fs = File.Create(@"C:\Private\Data\FE\Opgave\navne_hash.txt"); //Creates Scores.txt
-//fs.Close(); //Closes file stream
-//            }
-
-//            using (System.IO.StreamWriter file = new System.IO.StreamWriter(@"C:\Private\Data\FE\Opgave\navne_hash.txt"))
-//            {
-//                for (int i = 0; i<navne_hash.Length; i++)
-//                {
-//                    file.WriteLine((UInt32)navne_hash[i]);                    
-//                }
-////            }
-//if ((!File.Exists(@"C:\Private\Data\FE\Opgave\search_result.txt"))) //Checking if scores.txt exists or not
-//            {
-//                FileStream fs = File.Create(@"C:\Private\Data\FE\Opgave\search_result.txt"); //Creates Scores.txt
-//fs.Close(); //Closes file stream
-//            }
-
-//            using (System.IO.StreamWriter file = new System.IO.StreamWriter(@"C:\Private\Data\FE\Opgave\search_result.txt"))
-//            {
-//                for (int i = 0; i<navne.Length; i++)
-//                {
-//                    file.WriteLine(fundne_navne[i, 0]);
-//                    file.WriteLine(fundne_navne[i, 1]);
-//                }
-//            }
-
-//            var result = File.ReadAllLines(@"C:\Private\Data\FE\Opgave\search_result.txt");
-//uint[,] result_parsed = new uint[(int)result.Length / 2, 2];
-//int resultIdx = 0;
-//            while (resultIdx<result.Length / 2 - 1)
-//            {
-//                result_parsed[resultIdx, 0] = UInt32.Parse(result[resultIdx * 2]);
-//                result_parsed[resultIdx, 1] = UInt32.Parse(result[resultIdx * 2 + 1]);
-//                resultIdx++;
-//            }
