@@ -28,33 +28,33 @@ public class SearchText
 
     public static uint[] newHash(string[] key)
     {
-        const int CHUNK = 4;
+        const int CHUNK = 4; // Hash 4 bogstaver ad gangen
         uint[] hash_table = new uint[(int)key.Length];
         
         for (int n = 0; n < key.Length; n++) // Loop over all words in string array
         {
             int letterIdx = 0;
             ulong hashsum = 0;
-            int numOfChunks = (int)key[n].Length / CHUNK;
-            int arrayLength = numOfChunks;
+            int numOfChunks = (int)key[n].Length / CHUNK; // Antal chunks i et ord.
+            int arrayLength = numOfChunks; // Array-længde til array med hashede chunks
             int chunkIdx = 0; 
 
             if(((int)key[n].Length % CHUNK) > 0)
             {
-                arrayLength = numOfChunks + 1;
+                arrayLength = numOfChunks + 1; // Hvis ordlængde ikke er deleligt med CHUNKS array-længde inkremeneteres
             }
-            ulong[] array2sum = new ulong[arrayLength];
+            ulong[] array2sum = new ulong[arrayLength]; // Brug ulong[] til midlertidige hash-værdier for at undgå overflow
 
             for (int m = 0; m < numOfChunks; m++)
             {
-                ulong chunk_val = 0;
+                ulong chunk_val = 0; // Midlertidig hash-værdi
                 for (int ii = 0; ii < CHUNK; ii++)
                 {
                     letterIdx = m * CHUNK + ii;
                     chunk_val = key[n][letterIdx] + PRIME_BASE * chunk_val;
                 }
-                array2sum[m] = chunk_val;
-                chunkIdx += 1;
+                array2sum[m] = chunk_val; // Skriv hashed chunk til array
+                chunkIdx += 1; // Inkrementer hash-index
             }
 
             // mod(word length, chunk size) ~ 0:
@@ -63,12 +63,12 @@ public class SearchText
                 ulong chunk_val = 0; 
                 for(int j = numOfChunks*CHUNK; j < (int)key[n].Length; j++)
                 {
-                    chunk_val = key[n][j] + PRIME_BASE * chunk_val;
+                    chunk_val = key[n][j] + PRIME_BASE * chunk_val; 
                 }
                 array2sum[chunkIdx] = chunk_val;
             }
 
-            // Sum all hashed chunks of the string
+            // Summer alle hashede chunks af strengen
             for(int c = 0; c < arrayLength;  c++)
             {
                 hashsum += array2sum[c];
@@ -91,17 +91,17 @@ public class SearchText
             {
                 if (navne[m] == tekst[n])
                 {
-                    if (navne_idx != m) // New name found!
+                    if (navne_idx != m) // Nyt navn fundet!
                     {
-                        navne_idx = m;      // Update name index
-                        unikke_navne += 1;  // Increment counter of unique names
-                        matches = 0;        // Reset match counter
+                        navne_idx = m;      // Update navne index
+                        unikke_navne += 1;  // Inkrementer tæller af unikke navne
+                        matches = 0;        // Reset match tæller
                     }
 
                     matches += 1;
 
-                    fundne_navne[unikke_navne-1, 0] = navne_idx;
-                    fundne_navne[unikke_navne-1, 1] = matches;
+                    fundne_navne[unikke_navne-1, 0] = navne_idx;    // Skriv index i hashtabel
+                    fundne_navne[unikke_navne-1, 1] = matches;      // Opdater antal match
                 }
             }
         }
@@ -133,7 +133,7 @@ public class SearchText
         string path = @"C:\Private\Data\FE\Opgave\";
         string fileType = ".csv";
 
-        if ((!File.Exists(path + fileName))) //Checking if 
+        if ((!File.Exists(path + fileName))) //Checking if file exist
         {
             FileStream fs = File.Create(path + fileName); //Creates Scores.txt
             fs.Close(); //Closes file stream
@@ -143,8 +143,7 @@ public class SearchText
         {
             for (int i = 0; i < unikkeHits; i++)
             {
-                file.WriteLine(navne[searchResult[i, 0]].PadRight(20, ' ') + "\t" + searchResult[i, 1]);
-                //file.WriteLine(searchResult[i, 1]);
+                file.WriteLine(navne[searchResult[i, 0]].PadRight(20, ' ') + "\t" + searchResult[i, 1]); // Skriv resultat til fil.
             }
         }
     }

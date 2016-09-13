@@ -20,8 +20,7 @@ namespace Namesearch
             uint[] navne_hash = new uint[(int)navne.Length];
 
             string path_tekst = @"C:\Private\Data\FE\Opgave\sample_tekst.txt";
-            string tekst = File.ReadAllText(path_tekst);
-            //string tekst = "Denne tekst indeholder to pæne navne: Morten og Peter. Peter har en speciallægepraksis";
+            string tekst = File.ReadAllText(path_tekst);            
             string[] ord = tekst.Split(delimiterChars);
             uint[] tekst_hash = new uint[(int)ord.Length];
 
@@ -37,6 +36,8 @@ namespace Namesearch
 
             // Find alle forekomster af hashede navne i den hashede tekst og returner i array fundne_navne og unikke hits.
             SearchText.keywordSearch(navne_hash, tekst_hash, ref unikke_hits, ref fundne_navne);
+
+            // Skriv resultat til fil
             SearchText.writeResultToFile(navne, fundne_navne, "searchResult", unikke_hits);
               
             // Print resultater til konsollen
