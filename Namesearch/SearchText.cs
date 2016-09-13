@@ -143,7 +143,7 @@ public class SearchText
         {
             for (int i = 0; i < unikkeHits; i++)
             {
-                file.WriteLine(navne[searchResult[i, 0]] + "\t" + searchResult[i, 1]);
+                file.WriteLine(navne[searchResult[i, 0]].PadRight(20, ' ') + "\t" + searchResult[i, 1]);
                 //file.WriteLine(searchResult[i, 1]);
             }
         }

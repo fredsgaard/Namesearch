@@ -41,7 +41,7 @@ namespace Namesearch
               
             // Print resultater til konsollen
             for (uint n = 0; n < unikke_hits; n++)
-                Console.WriteLine("Navn : {0},\tHash index : {1}, \tAntal forekomster: {2}", navne[fundne_navne[n, 0]], fundne_navne[n, 0], fundne_navne[n, 1]);
+                Console.WriteLine("Navn : {0}Antal forekomster: {1}", navne[fundne_navne[n, 0]].PadRight(15, ' '), fundne_navne[n, 1]);
 
             Console.ReadKey();
 
