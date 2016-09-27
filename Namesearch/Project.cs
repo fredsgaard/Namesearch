@@ -19,6 +19,7 @@ namespace Namesearch
         static int Main(string[] args)
         {
             convertAudio.convertToBase64(FILEPATH_AUDIO, FILENAME_AUDIO);
+            transcribe.audio2text();
             char[] delimiterChars = { ' ', ',', '.', ':', '\t', ';', '\''};
             
             //Console.WriteLine("Angiv sti til navne-fil:");

@@ -92,6 +92,7 @@
     <Compile Include="Project.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StorageSample.cs" />
+    <Compile Include="transcribe.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
